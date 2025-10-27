@@ -19,15 +19,15 @@
 """
 
 # 思路：
-    # 将 p 的字符频率存储在字典中，然后使用双指针和滑动窗口的方式遍历字符串 s，检查当前窗口的字符频率是否与 p 的字符频率相同。
+    # 使用双指针和滑动窗口的方式遍历字符串 s，检查当前窗口的排序后的字符是否和p相同
 from typing import List
 from collections import deque
 class Solution:
     def findAnagrams(self, s: str, p: str) -> List[int]:
-        # 将p的字符频率存储在字典中
-        p_count = {}
-        for char in p:
-            p_count[char] = p_count.get(char, 0) + 1
+        # # 将p的字符频率存储在字典中
+        # p_count = {}
+        # for char in p:
+        #     p_count[char] = p_count.get(char, 0) + 1
         res = []
         s_count = deque()  # 用于存储当前窗口的字符
         p_length = len(p)

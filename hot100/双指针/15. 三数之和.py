@@ -27,58 +27,73 @@ nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0 。
 """
 
 # 思路：
-    # 先排序，设外层索引 i 从 0 到 n-3 遍历，每次将 nums[i] 作为固定数 a。
-    # 再通过双指针法来寻找三元组。
-    # 若 a>0，则三数之和最小也大于 0，可直接结束循环。
+    # 1.特判，对于数组长度 n，如果数组为 null 或者数组长度小于 3，返回 []。
+    # 2.对数组进行排序。
+    # 3.遍历排序后数组：
+        # 若 nums[i]>0：因为已经排序好，所以后面不可能有三个数加和等于 0，直接返回结果。
+        # 对于重复元素：跳过，避免出现重复解
+        # 令左指针 L=i+1，右指针 R=n−1，当 L<R 时，执行循环：
+            # 当 nums[i]+nums[L]+nums[R]==0，执行循环，判断左界和右界是否和下一位置重复，去除重复解。并同时将 L,R 移到下一位置，寻找新的解
+            # 若和大于 0，说明 nums[R] 太大，R 左移
+            # 若和小于 0，说明 nums[L] 太小，L 右移
 
-    # 若 i>0 且 nums[i]==nums[i-1]，跳过，避免重复三元组。
-
-    # 初始化左右指针 l=i+1、r=n-1，目标和为 -a。
-
-    # 当 l<r：
-    #  6.1 若 nums[l]+nums[r]==-a，记录 [a,nums[l],nums[r]]；随后移动 l 与 r 跳过相同元素避免重复；
-    #  6.2 若和小于 -a，说明需要更大的数，l++；
-    #  6.3 若和大于 -a，说明需要更小的数，r--。
 
     # 返回结果列表 res。
 from typing import List
 
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
-        # Edge case: fewer than 3 numbers
-        if len(nums) < 3:
+        
+        n = len(nums)               # 获取数组长度
+        res = []                    # 用于保存结果的列表
+        
+        # 特判：如果数组为空或长度小于3，不可能存在三元组
+        if (not nums or n < 3):
             return []
         
-        nums.sort()                       # Step 1: sort the array
-        res: List[List[int]] = []
-        n = len(nums)
-
-        for i in range(n - 2):            # Step 2: iterate fixed index i
-            a = nums[i]
-            if a > 0:                     # Step 3: pruning
-                break
-            if i > 0 and a == nums[i - 1]:# Step 4: skip duplicates for fixed a
+        nums.sort()                 # 对数组进行排序，方便后续使用双指针法
+        res = []                    # 初始化结果列表
+        
+        # 遍历数组中的每个元素，作为三元组中的第一个元素
+        for i in range(n):
+            # 如果当前数字大于0，因为数组是排序的，后续数字都大于0，不可能再有三数之和为0
+            if (nums[i] > 0):
+                return res
+            
+            # 如果当前数字与前一个数字相同，跳过，避免重复三元组
+            if (i > 0 and nums[i] == nums[i - 1]):
                 continue
-
-            l, r = i + 1, n - 1           # Step 5: two-pointer setup
-            target = -a
-
-            while l < r:                  # Step 6: move pointers
-                s = nums[l] + nums[r]
-                if s == target:
-                    res.append([a, nums[l], nums[r]])
-                    # Skip duplicates for nums[l]
-                    while l < r and nums[l] == nums[l + 1]:
-                        l += 1
-                    # Skip duplicates for nums[r]
-                    while l < r and nums[r] == nums[r - 1]:
-                        r -= 1
-                    l += 1
-                    r -= 1
-                elif s < target:
-                    l += 1                # Need a larger sum
+            
+            # 左右指针初始化：左指针在i右侧，右指针在数组末尾
+            L = i + 1
+            R = n - 1
+            
+            # 当左右指针没有相遇时继续查找
+            while (L < R):
+                # 当前三数之和
+                total = nums[i] + nums[L] + nums[R]
+                
+                if (total == 0):
+                    # 找到一个符合条件的三元组，加入结果列表
+                    res.append([nums[i], nums[L], nums[R]])
+                    
+                    # 跳过重复的左边元素
+                    while (L < R and nums[L] == nums[L + 1]):
+                        L = L + 1
+                    # 跳过重复的右边元素
+                    while (L < R and nums[R] == nums[R - 1]):
+                        R = R - 1
+                    
+                    # 同时移动左右指针，继续寻找其他可能的组合
+                    L = L + 1
+                    R = R - 1
+                
+                # 如果三数之和大于0，说明右边的数太大，右指针左移
+                elif (total > 0):
+                    R = R - 1
+                # 如果三数之和小于0，说明左边的数太小，左指针右移
                 else:
-                    r -= 1                # Need a smaller sum
+                    L = L + 1
+        
+        # 返回所有不重复的满足条件的三元组
         return res
-
-    

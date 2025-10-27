@@ -38,9 +38,9 @@ class Solution:
             # 右儿子为根的子树的深度
             R = depth(node.right)
             # 计算d_node即L+R+1 并更新ans
-            self.ans = max(self.ans, L + R + 1)
+            self.ans = max(self.ans, L + R + 1) # L + R + 1中1指根节点
             # 返回该节点为根的子树的深度
-            return max(L, R) + 1
+            return max(L, R) + 1 # 叶子节点的地方是 0+1
 
         depth(root)
         return self.ans - 1

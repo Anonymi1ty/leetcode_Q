@@ -1,7 +1,13 @@
-# for i in range(10):
-#     print(i)
-    
-n = 5
-while n > 0:
-    print(n)
-    n -= 1
+import sys
+
+data = iter(sys.stdin.read().strip().split())
+
+n = int(next(data))
+
+out = []
+for _ in range(n):
+    a = int(next(data))
+    b = int(next(data))
+    out.append(str(a+b))
+
+print("\n".join(out))

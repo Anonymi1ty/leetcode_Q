@@ -21,7 +21,7 @@ class Solution:
     def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
         if not root:
             return []
-        q = deque([root])
+        q = deque([root]) # deque初始化的时候必须要是一个可迭代的 type
         res = []
         while q:
             level_size = len(q)
